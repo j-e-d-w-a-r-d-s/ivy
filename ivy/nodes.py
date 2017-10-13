@@ -32,9 +32,9 @@ def root():
 def node(*slugs):
     node = root()
     for slug in slugs:
-        if not slug in node.subnodes:
+        if not slug in node.children:
             return None
-        node = node.subnodes[slug]
+        node = node.children[slug]
     return node
 
 
@@ -45,7 +45,7 @@ class Node():
     def __init__(self):
         self.data = {}
         self.parent = None
-        self.subnodes = {}
+        self.children = {}
         self.stem = ''
         self.slug = ''
         self.format = ''
@@ -89,7 +89,7 @@ class Node():
     # Return a printable tree showing the node and its descendants.
     def str(self, depth=0):
         out = ["·  " * depth + '/' + '/'.join(self.path)]
-        for child in self.children:
+        for child in self.childlist:
             out.append(child.str(depth + 1))
         return '\n'.join(out)
 
@@ -107,7 +107,7 @@ class Node():
         self['html'] = hooks.filter('node_html', html, self)
 
         # Initialize the node's subnodes.
-        for node in self.subnodes.values():
+        for node in self.children.values():
             node.init()
 
         # Fire the 'init_node' event. This fires 'bottom up', i.e. when this
@@ -120,7 +120,7 @@ class Node():
 
     # Call the specified function on the node and all its descendants.
     def walk(self, callback):
-        for node in self.subnodes.values():
+        for node in self.children.values():
             node.walk(callback)
         callback(self)
 
@@ -143,30 +143,15 @@ class Node():
         else:
             return '@root/'
 
-    # Return a list of child nodes ordered by slug.
+    # Return a list of child nodes ordered by stem.
     @property
-    def children(self):
-        return [self.subnodes[slug] for slug in sorted(self.subnodes)]
+    def childlist(self):
+        return [self.children[stem] for stem in sorted(self.children)]
 
-    # Return a list of descendent nodes. (Undefined order.)
+    # True if the node has child nodes.
     @property
-    def descendants(self):
-        descendent_nodes = []
-        for subnode in self.subnodes.values():
-            descendent_nodes.append(subnode)
-            descendent_nodes.extend(subnode.descendants)
-        return descendent_nodes
-
-    # Return a list of descendent leaf nodes. (Undefined order)
-    @property
-    def leaves(self):
-        leaf_nodes = []
-        for subnode in self.subnodes.values():
-            if subnode.subnodes:
-                leaf_nodes.extend(subnode.leaves)
-            else:
-                leaf_nodes.append(subnode)
-        return leaf_nodes
+    def has_children(self):
+        return len(self.children) > 0
 
 
 # Parse a source directory.
@@ -179,12 +164,12 @@ def parse_node_directory(dirnode, dirpath):
     # Loop over the directory's subdirectories.
     for path in [p for p in pathlib.Path(dirpath).iterdir() if p.is_dir()]:
         slug = utils.slugify(path.stem)
-        subnode = Node()
-        subnode.slug = slug
-        subnode.stem = path.stem
-        subnode.parent = dirnode
-        dirnode.subnodes[slug] = subnode
-        parse_node_directory(subnode, path)
+        childnode = Node()
+        childnode.slug = slug
+        childnode.stem = path.stem
+        childnode.parent = dirnode
+        dirnode.children[slug] = childnode
+        parse_node_directory(childnode, path)
 
     # Loop over the directory's files. We skip dotfiles and file types for
     # which we don't have a registered rendering-engine callback.
@@ -213,7 +198,7 @@ def parse_node_file(dirnode, filepath):
         filenode.slug = slug
         filenode.stem = filepath.stem
         filenode.parent = dirnode
-        dirnode.subnodes[slug] = filenode
+        dirnode.children[slug] = filenode
 
     # Update the new or existing node with the file's text and metadata.
     filenode['text'], meta = loader.load(filepath)

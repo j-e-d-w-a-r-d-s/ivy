@@ -3,24 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Extensions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="pygments.css">
     
+    
   </head>
+
   <body class="node-extensions node">
 
     <header class="masthead">
-      <h1>
-        <a href="index.html">Ivy</a>
-      </h1>
-
+      <h1><a href="index.html">Ivy</a></h1>
       
         <p class="tagline">Ivy is a static website generator built in Python.
 It transforms a directory of text files into a self-contained website.</p>
       
-
       <nav class="menu">
         <input id="menu-check" type="checkbox"/>
         <label id="menu-label" for="menu-check" class="unselectable">
@@ -43,6 +41,12 @@ It transforms a directory of text files into a self-contained website.</p>
 </li>
 <li>
 <a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="faq.html">FAQ</a>
+</li>
+<li>
+<a href="changelog.html">Changelog</a>
 </li>
 </ul>
 
@@ -180,7 +184,7 @@ A template-engine callback should accept a <code>Page</code> object and a templa
 Node Content
 </h3>
 <p>
-Ivy has builtin support for node files written in <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> and <a href="https://github.com/dmulholland/syntex">Syntex</a>. Plugins can register support for additional formats using the <code>@renderers.register()</code> decorator. Rendering-engine callbacks are registered per file-extension, e.g.
+Ivy has builtin support for node files written in <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> and <a href="http://mulholland.xyz/docs/monk/">Monk</a>. Plugins can register support for additional formats using the <code>@renderers.register()</code> decorator. Rendering-engine callbacks are registered per file-extension, e.g.
 </p>
 <pre class="lang-python pygments" data-lang="python">
 <span class="kn">import</span> <span class="nn">ivy</span>
@@ -261,5 +265,6 @@ Note that shortcodes are processed <em>before</em> node text is rendered into HT
     </article>
 
     
+
   </body>
 </html>

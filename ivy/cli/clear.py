@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------------
-# Logic for the 'clear' command.
+# This module contains the logic for the 'clear' command.
 # --------------------------------------------------------------------------
 
 import sys
@@ -7,6 +7,7 @@ import os
 
 from .. import site
 from .. import utils
+from .. import hooks
 
 
 # Command help text.
@@ -16,9 +17,15 @@ Usage: %s clear [FLAGS]
   Clear the output directory.
 
 Flags:
-  --help              Print this command's help text and exit.
+  -h, --help          Print this command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
+
+
+# Register the command on the 'cli' event hook.
+@hooks.register('cli')
+def register_command(parser):
+    parser.new_cmd("clear", helptext, callback)
 
 
 # Command callback.

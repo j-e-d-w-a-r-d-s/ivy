@@ -1,5 +1,7 @@
 # --------------------------------------------------------------------------
-# This extension adds a 'tree' command to Ivy's CLI.
+# This extension adds a 'tree' command to Ivy's command line interface. We
+# implement the command here rather than in the cli package to provide an
+# example of an extension registering a custom command.
 # --------------------------------------------------------------------------
 
 import ivy
@@ -20,10 +22,10 @@ Flags:
 """ % os.path.basename(sys.argv[0])
 
 
-# Register our new command on the 'cli' event hook.
+# Register our command on the 'cli' event hook.
 @ivy.hooks.register('cli')
-def register_tree_command(parser):
-    parser.add_cmd("tree", helptext, callback)
+def register_command(parser):
+    parser.new_cmd("tree", helptext, callback)
 
 
 # Command callback.
@@ -36,8 +38,8 @@ def callback(parser):
 
         cols, _ = shutil.get_terminal_size()
 
-        print('-' * cols)
+        print('─' * cols)
         print('Site: %s' % ivy.site.home())
-        print('-' * cols)
+        print('─' * cols)
         print(ivy.nodes.root().str())
-        print('-' * cols)
+        print('─' * cols)

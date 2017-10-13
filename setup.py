@@ -3,9 +3,11 @@
 Ivy
 ===
 
-Ivy is a minimalist static website generator. It transforms a directory of text files into a self-contained website.
+Ivy is a minimalist static website generator. It transforms a directory of
+text files into a self-contained website.
 
-* `Github Homepage <https://github.com/dmulholland/ivy>`_
+* `Github <https://github.com/dmulholland/ivy>`_
+* `Documentation <https://mulholland.xyz/docs/ivy/>`_
 
 """
 
@@ -53,10 +55,11 @@ setup(
         'pygments >= 2.1.3, < 3.0.0',
         'pyyaml >= 3.11, < 4.0',
         'jinja2 >= 2.8, < 3.0',
+        'libmonk >= 1.0.0, < 2.0.0',
         'syntex',
         'ibis >= 1.6.0, < 2.0.0',
         'shortcodes >= 2.1.0, < 3.0.0',
-        'libclio >= 2.0.0, < 3.0.0',
+        'libjanus',
     ],
     author = 'Darren Mulholland',
     url='https://github.com/dmulholland/ivy',

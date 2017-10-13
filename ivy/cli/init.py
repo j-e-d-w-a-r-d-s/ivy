@@ -1,11 +1,12 @@
 # --------------------------------------------------------------------------
-# Logic for the 'init' command.
+# This module contains the logic for the 'init' command.
 # --------------------------------------------------------------------------
 
 import os
 import sys
 
 from .. import utils
+from .. import hooks
 
 
 # Command help text.
@@ -20,9 +21,15 @@ Arguments:
   [directory]         Directory name. Defaults to the current directory.
 
 Flags:
-  --help              Print this command's help text and exit.
+  -h, --help          Print this command's help text and exit.
 
 """ % os.path.basename(sys.argv[0])
+
+
+# Register the command on the 'cli' event hook.
+@hooks.register('cli')
+def register_command(parser):
+    parser.new_cmd("init", helptext, callback)
 
 
 # Command callback.

@@ -3,24 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Guide</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="pygments.css">
     
+    
   </head>
+
   <body class="node-guide node">
 
     <header class="masthead">
-      <h1>
-        <a href="index.html">Ivy</a>
-      </h1>
-
+      <h1><a href="index.html">Ivy</a></h1>
       
         <p class="tagline">Ivy is a static website generator built in Python.
 It transforms a directory of text files into a self-contained website.</p>
       
-
       <nav class="menu">
         <input id="menu-check" type="checkbox"/>
         <label id="menu-label" for="menu-check" class="unselectable">
@@ -44,6 +42,12 @@ It transforms a directory of text files into a self-contained website.</p>
 <li>
 <a href="extensions.html">Extensions</a>
 </li>
+<li>
+<a href="faq.html">FAQ</a>
+</li>
+<li>
+<a href="changelog.html">Changelog</a>
+</li>
 </ul>
 
       </nav>
@@ -66,6 +70,9 @@ It transforms a directory of text files into a self-contained website.</p>
 <a href="#nodes">Nodes</a>
 </li>
 <li>
+<a href="#node-meta">Node Meta</a>
+</li>
+<li>
 <a href="#links">Links</a>
 </li>
 <li>
@@ -82,6 +89,9 @@ It transforms a directory of text files into a self-contained website.</p>
 </li>
 <li>
 <a href="#shortcodes">Shortcodes</a>
+</li>
+<li>
+<a href="#automenu">Automenu</a>
 </li>
 </ul>
 </li>
@@ -139,7 +149,7 @@ Initializing a new site creates the following directory structure:
 </p>
 <pre>
 site/
-    site.py      # site configuration file
+    config.py    # site configuration file
     ext/         # extensions directory for plugins
     inc/         # includes directory for menus, etc.
     lib/         # library directory for themes
@@ -148,7 +158,7 @@ site/
     src/         # source directory for text files
 </pre>
 <p>
-The site configuration file can be deleted if the site does not require custom settings; unused directories can likewise be deleted. (Note however that Ivy requires the presence of either a <code>site.py</code> file or both <code>src</code> and <code>out</code> directories to identify a site's home directory.)
+The site configuration file can be deleted if the site does not require custom settings; unused directories can likewise be deleted. (Note however that Ivy requires the presence of either a <code>config.py</code> file or both <code>src</code> and <code>out</code> directories to identify a site's home directory.)
 </p>
 <p>
 Static assets such as image files should be placed in the site's resources directory, <code>res</code>. The content of this directory is copied to the output directory when the site is built.
@@ -157,7 +167,7 @@ Static assets such as image files should be placed in the site's resources direc
 Nodes
 </h2>
 <p>
-A node is a text file or a directory stored in a site's <code>src</code> directory. Ivy parses the <code>src</code> directory into a tree of nodes which it then renders into a website, generating a single HTML page in the <code>out</code> directory for each node in the tree.
+A node is a text file or directory stored in a site's <code>src</code> directory. Ivy parses the <code>src</code> directory into a tree of nodes which it then renders into a website, generating a single HTML page in the <code>out</code> directory for each node in the tree.
 </p>
 <p>
 A node file can begin with a <a href="http://en.wikipedia.org/wiki/YAML">YAML</a> header specifying metadata for the node:
@@ -172,14 +182,13 @@ date: 1901-07-21
 Content begins here.
 </pre>
 <p>
-Node content can be written in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> or <a href="https://github.com/dmulholland/syntex">Syntex</a>. Files with a <code>.md</code> extension are rendered as Markdown, files with a <code>.stx</code> extension are rendered as Syntex. (Ivy can be extended via plugins to support other formats and extensions.)
+Node content can be written in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> or <a href="http://mulholland.xyz/docs/monk/">Monk</a>. Files with a <code>.md</code> extension are rendered as Markdown, files with a <code>.monk</code> extension are rendered as Monk. (Ivy can be extended via plugins to support other formats and extensions.)
 </p>
 <p>
-Note that the files
+Note that the file
 </p>
 <pre>
 /src/foo/bar.md
-/src/foo/bar/index.md
 </pre>
 <p>
 and the directory
@@ -188,8 +197,54 @@ and the directory
 /src/foo/bar/
 </pre>
 <p>
-all correspond to a single node in the parse tree. Node files provide content and metadata for a node; node directories store child nodes.
+correspond to a single node in the parse tree. Node files provide content and metadata for a node; node directories store child nodes.
 </p>
+<p>
+Files named <code>index</code> are special-cased and correspond to the same node as their parent directory.
+</p>
+<h2 id="node-meta">
+Node Meta
+</h2>
+<p>
+Ivy has builtin support for node metadata in <a href="http://en.wikipedia.org/wiki/YAML">YAML</a> format; support for additional formats can be added via extensions. Note that a node file's metadata keys are converted to lowercase and spaces are replaced by underscores so the YAML attribute
+</p>
+<pre>
+---
+Date of Birth: 1901-02-28
+---
+</pre>
+<p>
+would be accessible in template files as <code>node.date_of_birth</code>.
+</p>
+<p>
+All nodes have the following default attributes:
+</p>
+<dl>
+<dt>
+<code>html</code>
+</dt>
+<dd>
+<p>
+The node's text content rendered into html.
+</p>
+</dd>
+<dt>
+<code>text</code>
+</dt>
+<dd>
+<p>
+The node's raw text content.
+</p>
+</dd>
+<dt>
+<code>url</code>
+</dt>
+<dd>
+<p>
+The node's url.
+</p>
+</dd>
+</dl>
 <h2 id="links">
 Links
 </h2>
@@ -226,11 +281,14 @@ Use two trailing slashes when linking to pages generated by Ivy itself &mdash; t
 <p>
 Linking to the homepage is a special case: a simple <code>@root/</code> will always suffice.
 </p>
+<p>
+If you want to include a literal <code>@root/</code> url without having it rewritten you can escape it with a preceeding backslash, <code>\@root/</code>. (Note that you may need to double-escape the backslash itself to avoid it being consumed by the Markdown or Monk parser.)
+</p>
 <h2 id="includes">
 Includes
 </h2>
 <p>
-The <em>includes</em> directory, <code>inc</code>, is intended for snippets of content that can be reused on multiple pages throughout the site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Syntex depending on their extension and the resulting HTML made available for inclusion in template files via the <code>inc.&lt;name&gt;</code> attribute.
+The <em>includes</em> directory, <code>inc</code>, is intended for snippets of content that can be reused on multiple pages throughout the site, e.g. menus or footer links. Source files placed in this folder will be parsed as Markdown or Monk depending on their extension and the resulting HTML made available for inclusion in template files via the <code>inc.&lt;name&gt;</code> attribute.
 </p>
 <p>
 For example, a menu can be constructed in Markdown using nested lists:
@@ -275,6 +333,24 @@ Shortcodes
 <p>
 Ivy uses the <a href="https://github.com/dmulholland/shortcodes">Shortcodes</a> package to process shortcodes in record files. You can add a dictionary of keyword arguments for the shortcode parser to your site configuration file via a <code>shortcodes</code> attribute.
 </p>
+<h3 id="automenu">
+Automenu
+</h3>
+<p>
+The bundled Automenu extension automatically generates a menu containing links to every node in the site. The menu can be accessed in templates via an <code>automenu</code> attribute. This menu can be customized in two ways:
+</p>
+<ul>
+<li>
+<p>
+If a node has a <code>menu_title</code> attribute, its value will be used in the menu in place of the node's title.
+</p>
+</li>
+<li>
+<p>
+By default entries are ordered alphabetically by filename. Entry order can be customized by giving nodes an integer <code>menu_order</code> attribute with lower numbers coming first. The default order value is 0. (Note that the homepage is an exception and will always be the first entry in the menu.)
+</p>
+</li>
+</ul>
 <h2 id="dependencies">
 Dependencies
 </h2>
@@ -284,7 +360,7 @@ Installing Ivy via <code>pip</code> automatically installs the following require
 <ul>
 <li>
 <p>
-<a href="https://pypi.python.org/pypi/libclio">Clio</a>
+<a href="https://pypi.python.org/pypi/libjanus">Janus</a>
 </p>
 </li>
 </ul>
@@ -311,7 +387,7 @@ Installing via <code>pip</code> also automatically installs the following option
 <a href="https://pypi.python.org/pypi/shortcodes">Shortcodes</a>
 </li>
 <li>
-<a href="https://pypi.python.org/pypi/syntex">Syntex</a>
+<a href="https://pypi.python.org/pypi/libmonk">Monk</a>
 </li>
 </ul>
 <p>
@@ -321,5 +397,6 @@ Ivy will run without any of these optional dependencies installed but the associ
     </article>
 
     
+
   </body>
 </html>

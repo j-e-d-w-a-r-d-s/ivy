@@ -3,24 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Quickstart</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="pygments.css">
     
+    
   </head>
+
   <body class="node-quickstart node">
 
     <header class="masthead">
-      <h1>
-        <a href="index.html">Ivy</a>
-      </h1>
-
+      <h1><a href="index.html">Ivy</a></h1>
       
         <p class="tagline">Ivy is a static website generator built in Python.
 It transforms a directory of text files into a self-contained website.</p>
       
-
       <nav class="menu">
         <input id="menu-check" type="checkbox"/>
         <label id="menu-label" for="menu-check" class="unselectable">
@@ -44,6 +42,12 @@ It transforms a directory of text files into a self-contained website.</p>
 <li>
 <a href="extensions.html">Extensions</a>
 </li>
+<li>
+<a href="faq.html">FAQ</a>
+</li>
+<li>
+<a href="changelog.html">Changelog</a>
+</li>
 </ul>
 
       </nav>
@@ -62,7 +66,16 @@ Install Ivy from the Python Package Index using <code>pip</code>:
 $ pip install ivy
 </pre>
 <p>
-Create a new directory for your site and <code>cd</code> into it:
+Note that Ivy requires Python 3.5 or later. You can check your Python version using the <code>--version</code> flag:
+</p>
+<pre>
+$ python --version
+</pre>
+<p>
+Depending on how your system has been configured, <code>pip</code> may be hardwired to use Python 2 and you may have to explicitly specify <code>pip3</code> instead.
+</p>
+<p>
+Once Ivy has installed, create a new directory for your site and <code>cd</code> into it:
 </p>
 <pre>
 $ mkdir mysite
@@ -79,7 +92,7 @@ Ivy will create the following directory structure for your site:
 </p>
 <pre>
 mysite/
-    site.py      # site configuration file
+    config.py    # site configuration file
     ext/         # extensions directory for plugins
     inc/         # includes directory for menus, etc.
     lib/         # library directory for themes
@@ -124,5 +137,6 @@ replacing <code>&lt;command&gt;</code> with the command name.
     </article>
 
     
+
   </body>
 </html>
